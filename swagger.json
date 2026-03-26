@@ -1,0 +1,185 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Daily Expense Tracker API",
+    "description": "A simple API for tracking daily expenses.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/api/expenses": {
+      "get": {
+        "summary": "Get all expenses",
+        "description": "Retrieves a list of all expenses, sorted by date descending.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "count": { "type": "integer", "example": 1 },
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Expense" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new expense",
+        "description": "Creates a new daily expense record.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "price", "reason"],
+                "properties": {
+                  "title": { "type": "string", "example": "Lunch" },
+                  "description": { "type": "string", "example": "Pasta at Italian Restaurant" },
+                  "price": { "type": "number", "example": 15 },
+                  "reason": { "type": "string", "example": "Food" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Expense created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/Expense" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation Error" }
+        }
+      }
+    },
+    "/api/expenses/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the expense",
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Get a single expense",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/Expense" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Expense not found" }
+        }
+      },
+      "put": {
+        "summary": "Update an expense",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "price": { "type": "number" },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Expense updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "$ref": "#/components/schemas/Expense" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation Error" },
+          "404": { "description": "Expense not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete an expense",
+        "responses": {
+          "200": {
+            "description": "Expense deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "data": { "type": "object", "example": {} }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Expense not found" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Expense": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "example": "60d0fe4f5311236168a109ca" },
+          "title": { "type": "string", "example": "Lunch" },
+          "description": { "type": "string", "example": "Pasta at Italian Restaurant" },
+          "price": { "type": "number", "example": 15 },
+          "reason": { "type": "string", "example": "Food" },
+          "date": { "type": "string", "format": "date-time", "example": "2023-10-25T14:48:00.000Z" },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2023-10-25T14:48:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2023-10-25T14:48:00.000Z" },
+          "__v": { "type": "integer", "example": 0 }
+        }
+      }
+    }
+  }
+}
